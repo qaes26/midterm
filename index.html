@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار اللغة العربية - إعداد ريم عواوده وقيس الجازي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+        }
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .option-label {
+            transition: all 0.2s ease;
+        }
+        .option-label:hover {
+            background-color: #e5e7eb;
+        }
+        input[type="radio"]:checked + .option-text {
+            font-weight: bold;
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased pb-20">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-6 text-center">
+            <h1 class="text-3xl md:text-4xl font-extrabold mb-3">اختبار شامل في قواعد اللغة العربية</h1>
+            <p class="text-lg md:text-xl text-blue-100 mb-4">من أقسام الكلام، الهمزات، المرفوعات، وحتى نائب الفاعل</p>
+            <div class="inline-block bg-white text-indigo-900 px-6 py-2 rounded-full font-bold shadow-md">
+                من إعداد: ريم عواوده وقيس الجازي
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+        
+        <!-- Score Board (Hidden initially) -->
+        <div id="score-board" class="hidden bg-white rounded-xl shadow-lg p-8 mb-8 text-center border-t-8 border-green-500 transform transition-all">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">النتيجة النهائية</h2>
+            <div class="text-5xl font-extrabold text-blue-600 my-4" id="score-text">0 / 70</div>
+            <p id="score-message" class="text-xl font-medium text-gray-600"></p>
+            <button onclick="location.reload()" class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">إعادة الاختبار</button>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container" class="space-y-6">
+                <!-- Questions will be injected here via JavaScript -->
+            </div>
+
+            <div class="mt-10 text-center">
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-xl font-bold py-4 px-12 rounded-xl shadow-lg transform transition hover:scale-105">
+                    إظهار النتيجة
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-12 text-center">
+        <p>جميع الحقوق محفوظة &copy; 2026 - تم الإعداد بواسطة <span class="text-blue-400 font-bold">ريم عواوده</span> و <span class="text-blue-400 font-bold">قيس الجازي</span></p>
+    </footer>
+
+    <script>
+        // Quiz Data: 70 Questions
+        const quizData = [
+            // أقسام الكلام (1-10)
+            { q: "الكلمة التي تدل على معنى في نفسها غير مقترن بزمن تسمى:", options: ["الفعل", "الاسم", "الحرف", "الجملة"], ans: 1 },
+            { q: "من أهم علامات الاسم التي تميزه عن الفعل والحرف:", options: ["تاء التأنيث الساكنة", "دخول (قد)", "التنوين وحروف الجر", "ياء المخاطبة"], ans: 2 },
+            { q: "الكلمة التي تدل على حدث مقترن بزمن معين تسمى:", options: ["الاسم", "الفعل", "الحرف", "المصدر"], ans: 1 },
+            { q: "من علامات الفعل الماضي أنه يقبل:", options: ["ال التعريف", "السين وسوف", "تاء التأنيث الساكنة", "حروف الجر"], ans: 2 },
+            { q: "الفعل المضارع يختص بدخول علامات معينة عليه منها:", options: ["تاء الفاعل", "لم ولن والسين وسوف", "التنوين", "دخول ال التعريف"], ans: 1 },
+            { q: "الكلمة التي لا يظهر معناها كاملاً إلا مع غيرها هي:", options: ["الحرف", "الاسم", "الفعل الماضي", "الفعل الأمر"], ans: 0 },
+            { q: "علامة الفعل الأمر هي الدلالة على الطلب مع قبوله:", options: ["تاء التأنيث", "ياء المخاطبة", "حرف الجر", "ال التعريف"], ans: 1 },
+            { q: "في جملة (الطالب مجتهدٌ)، التنوين في كلمة (مجتهدٌ) دليل على أنها:", options: ["فعل", "حرف", "اسم", "شبه جملة"], ans: 2 },
+            { q: "دخول حرف الجر (في) على كلمة يدل على أن هذه الكلمة:", options: ["اسم", "فعل", "حرف", "لا شيء مما ذكر"], ans: 0 },
+            { q: "الحرف (قد) يدخل على الأفعال:", options: ["الماضية فقط", "المضارعة فقط", "الماضية والمضارعة", "الأمر والمضارع"], ans: 2 },
+            
+            // همزة الوصل والقطع (11-25)
+            { q: "الهمزة التي يُنطق بها في أول الكلام وتسقط في درجه (وصله) هي:", options: ["همزة القطع", "همزة الوصل", "الهمزة المتوسطة", "الهمزة المتطرفة"], ans: 1 },
+            { q: "الهمزة التي تثبت نطقاً وكتابة في بدء الكلام ووصله هي:", options: ["همزة الوصل", "همزة القطع", "الهمزة الممدودة", "الهمزة المتطرفة"], ans: 1 },
+            { q: "جميع الأسماء في اللغة العربية همزتها قطع ما عدا مجموعة من الأسماء السماعية منها:", options: ["أحمد، أسد، أمل", "إبراهيم، إسماعيل", "ابن، ابنة، اسم، امرؤ", "أولئك، أنتم، أنا"], ans: 2 },
+            { q: "جميع الحروف همزتها قطع (إن، إلى، أو...) باستثناء حرف واحد همزته وصل وهو:", options: ["حرف العطف (الواو)", "حرف الجر (من)", "ال التعريف", "السين"], ans: 2 },
+            { q: "كلمة (أحمد) همزتها:", options: ["همزة وصل", "همزة متوسطة", "همزة متطرفة", "همزة قطع"], ans: 3 },
+            { q: "الفعل الماضي الثلاثي المبدوء بهمزة (مثل: أخذ، أكل) همزته:", options: ["همزة قطع", "همزة وصل", "همزة متطرفة", "لا يحتوي على همزة"], ans: 0 },
+            { q: "الفعل الماضي الرباعي وأمره ومصدره (مثل: أكرَمَ، أَكْرِمْ، إكرام) همزته:", options: ["همزة وصل", "همزة قطع", "ألف لينة", "متوسطة"], ans: 1 },
+            { q: "أمر الفعل الثلاثي (مثل: اكتب، اقرأ) همزته:", options: ["همزة قطع", "همزة وصل", "همزة مد", "همزة متوسطة"], ans: 1 },
+            { q: "ماضي الفعل الخماسي ومصدره (مثل: انتصر، انتصار) همزته:", options: ["همزة وصل", "همزة قطع", "همزة طايرة", "مفتوحة دائماً"], ans: 0 },
+            { q: "ماضي الفعل السداسي ومصدره (مثل: استغفر، استغفار) همزته:", options: ["همزة قطع", "همزة متطرفة", "همزة وصل", "حسب الإعراب"], ans: 2 },
+            { q: "همزة المضارعة (أنا أكتبُ، أستغفرُ) دائماً تكون:", options: ["همزة وصل", "همزة قطع", "تكتب ولا تلفظ", "مكسورة"], ans: 1 },
+            { q: "كلمة (اثنان، اثنتان) همزتهما:", options: ["همزة قطع", "همزة وصل", "تتغير حسب الموقع", "تكتب ولا تنطق"], ans: 1 },
+            { q: "كلمة (إلى) همزتها قطع لأنها:", options: ["اسم", "فعل ماضي", "حرف", "فعل مضارع"], ans: 2 },
+            { q: "إذا وقعت كلمة (ابن) مفردة بين علمين الثاني أب للأول، فإن همزتها:", options: ["تبقى كما هي", "تتحول إلى قطع", "تُحذف", "تُكتب على السطر"], ans: 2 },
+            { q: "تُحذف همزة كلمة (اسم) في حالة واحدة مشهورة هي:", options: ["إذا وقعت بين علمين", "في البسملة التامة", "إذا سبقت بحرف جر", "إذا جاءت في آخر الجملة"], ans: 1 },
+            
+            // الهمزة المتوسطة والمتطرفة (26-35)
+            { q: "عند كتابة الهمزة المتوسطة، نقارن بين حركتها وحركة الحرف الذي قبلها، وأقوى الحركات هي:", options: ["الضمة", "الفتحة", "السكون", "الكسرة"], ans: 3 },
+            { q: "الكسرة هي أقوى الحركات ويناسبها من الحروف:", options: ["الألف", "الواو", "النبرة (الياء غير المنقوطة)", "السطر"], ans: 2 },
+            { q: "الضمة هي ثاني أقوى الحركات ويناسبها كتابة الهمزة على:", options: ["الواو", "الألف", "النبرة", "السطر"], ans: 0 },
+            { q: "الفتحة يناسبها كتابة الهمزة على:", options: ["الواو", "النبرة", "الألف", "السطر"], ans: 2 },
+            { q: "في كلمة (مُؤْمن)، كُتبت الهمزة على واو لأنها:", options: ["مضمومة وما قبلها ساكن", "ساكنة وما قبلها مضموم", "مفتوحة وما قبلها مضموم", "مضمومة وما قبلها مضموم"], ans: 1 },
+            { q: "في كلمة (فِئَة)، كُتبت الهمزة على نبرة لأنها:", options: ["مكسورة", "ساكنة وما قبلها مكسور", "مفتوحة وما قبلها مكسور", "مفتوحة وما قبلها مفتوح"], ans: 2 },
+            { q: "في كلمة (رَأْس)، كُتبت الهمزة على ألف لأنها:", options: ["مفتوحة وما قبلها مفتوح", "ساكنة وما قبلها مفتوح", "مفتوحة وما قبلها ساكن", "مضمومة وما قبلها مفتوح"], ans: 1 },
+            { q: "تُكتب الهمزة المتطرفة (في آخر الكلمة) بناءً على:", options: ["حركة الهمزة نفسها", "حركة الحرف الذي قبلها فقط", "أقوى الحركتين", "موقعها من الإعراب"], ans: 1 },
+            { q: "في كلمة (شاطِئ)، كُتبت الهمزة على ياء لأن الحرف الذي قبلها:", options: ["مفتوح", "مضموم", "مكسور", "ساكن"], ans: 2 },
+            { q: "في كلمة (دِفْء)، كُتبت الهمزة على السطر لأن الحرف الذي قبلها:", options: ["مفتوح", "مضموم", "مكسور", "ساكن"], ans: 3 },
+
+            // المبتدأ والخبر (36-45)
+            { q: "المرفوعات من الأسماء في اللغة العربية تشمل:", options: ["المبتدأ والخبر والفاعل ونائب الفاعل", "المفعول به والمفعول المطلق", "المضاف إليه والاسم المجرور", "الحال والتمييز"], ans: 0 },
+            { q: "الاسم المرفوع العاري عن العوامل اللفظية ويقع في أول الجملة غالباً يُسمى:", options: ["الخبر", "المبتدأ", "الفاعل", "نائب الفاعل"], ans: 1 },
+            { q: "الركن الثاني من أركان الجملة الاسمية الذي تتم به الفائدة مع المبتدأ هو:", options: ["النعت", "الخبر", "المضاف إليه", "البدل"], ans: 1 },
+            { q: "في جملة (القدسُ عربيةٌ)، كلمة (عربية) تُعرب:", options: ["مبتدأ", "فاعل", "خبراً للمبتدأ", "صفة"], ans: 2 },
+            { q: "يأتي الخبر في الجملة الاسمية على عدة أنواع، وهي:", options: ["مفرد فقط", "جملة وشبه جملة فقط", "مفرد، وجملة، وشبه جملة", "مضاف ومضاف إليه"], ans: 2 },
+            { q: "في جملة (الطالبُ يدرسُ دروسه)، نوع الخبر:", options: ["مفرد", "شبه جملة", "جملة اسمية", "جملة فعلية"], ans: 3 },
+            { q: "في جملة (العصفورُ فوقَ الشجرة)، نوع الخبر:", options: ["جملة اسمية", "جملة فعلية", "شبه جملة (ظرف)", "مفرد"], ans: 2 },
+            { q: "في جملة (المدرسةُ ساحتها واسعة)، نوع الخبر:", options: ["مفرد", "جملة فعلية", "شبه جملة", "جملة اسمية"], ans: 3 },
+            { q: "الأصل في المبتدأ أن يكون:", options: ["نكرة", "معرفة", "فعلاً", "شبه جملة"], ans: 1 },
+            { q: "يجب تقديم الخبر على المبتدأ إذا كان الخبر شبه جملة والمبتدأ:", options: ["معرفة", "نكرة", "مضافاً", "معرفاً بال"], ans: 1 },
+
+            // إن وأخواتها (46-52)
+            { q: "إنّ وأخواتها حروف ناسخة تدخل على الجملة الاسمية فـ:", options: ["ترفع المبتدأ وتنصب الخبر", "تنصب المبتدأ وترفع الخبر", "تجر المبتدأ وترفع الخبر", "تنصب المبتدأ والخبر"], ans: 1 },
+            { q: "من أخوات (إنّ) وتُفيد التشبيه:", options: ["لعل", "لكن", "كأن", "ليت"], ans: 2 },
+            { q: "الحرف الناسخ (لكنّ) يُفيد:", options: ["الترجي", "الاستدراك", "التمني", "التوكيد"], ans: 1 },
+            { q: "الحرف الناسخ (لعل) يُفيد:", options: ["التمني (للشيء المستحيل)", "الترجي (للشيء الممكن حصوله)", "الاستدراك", "التشبيه"], ans: 1 },
+            { q: "الحرف الناسخ (ليت) يُفيد:", options: ["التوكيد", "الاستدراك", "الترجي", "التمني (وغالبا للشيء صعب المنال)"], ans: 3 },
+            { q: "في جملة (إنّ الجوَ جميلٌ)، كلمة (الجوَّ) تُعرب:", options: ["مبتدأ مرفوع", "اسم إن منصوب", "خبر إن مرفوع", "فاعل"], ans: 1 },
+            { q: "في جملة (لعل الفرجَ قريبٌ)، كلمة (قريبٌ) تُعرب:", options: ["خبر لعل مرفوع", "اسم لعل منصوب", "مبتدأ", "صفة"], ans: 0 },
+
+            // كان وأخواتها (53-60)
+            { q: "كان وأخواتها أفعال ناسخة تدخل على الجملة الاسمية فـ:", options: ["تنصب المبتدأ وترفع الخبر", "ترفع المبتدأ ويسمى اسمها وتنصب الخبر ويسمى خبرها", "تنصب المبتدأ والخبر معاً", "تجر المبتدأ والخبر"], ans: 1 },
+            { q: "الفعل الناسخ (صار) يفيد:", options: ["النفي", "الاستمرار", "التحول والصيرورة من حالة لأخرى", "التمني"], ans: 2 },
+            { q: "الفعل الناسخ (ليس) يفيد:", options: ["الاستدراك", "التوكيد", "النفي", "الاستمرار"], ans: 2 },
+            { q: "الأفعال (ما زال، ما برح، ما فتئ، ما انفك) تُفيد:", options: ["التحول", "النفي المطلق", "الاستمرار", "الترجي"], ans: 2 },
+            { q: "في جملة (كانَ الامتحانُ سهلاً)، كلمة (سهلاً) تُعرب:", options: ["حال منصوبة", "مفعول به", "خبر كان منصوب", "اسم كان مرفوع"], ans: 2 },
+            { q: "من أخوات كان ويشترط لعمله أن يُسبق بـ (ما) المصدرية الظرفية:", options: ["أصبح", "ليس", "دام", "صار"], ans: 2 },
+            { q: "الفعل (أمسى) من أخوات كان، ويفيد اتصاف المبتدأ بالخبر في:", options: ["الصباح", "وقت الضحى", "الليل", "المساء"], ans: 3 },
+            { q: "الأفعال (أصبح، أضحى، ظل، بات) تُعد من:", options: ["أخوات إن", "حروف الجر", "أخوات كان", "أدوات النصب"], ans: 2 },
+
+            // الفاعل (61-65)
+            { q: "الاسم المرفوع الذي يقع بعد فعل مبني للمعلوم ويدل على من قام بالفعل أو اتصف به هو:", options: ["المبتدأ", "الفاعل", "نائب الفاعل", "المفعول به"], ans: 1 },
+            { q: "في جملة (نامَ الطفلُ عميقاً)، الفاعل هو:", options: ["نام", "الطفل", "عميقاً", "ضمير مستتر"], ans: 1 },
+            { q: "في جملة (اكتُبْ درسَكَ)، الفاعل هو:", options: ["درسك", "ضمير مستتر وجوباً تقديره (أنت)", "حرف الكاف", "لا يوجد فاعل"], ans: 1 },
+            { q: "إذا كان الفاعل مؤنثاً، فإن الفعل الماضي تلحقه:", options: ["تاء الفاعل المتحركة", "ياء المخاطبة", "نون النسوة", "تاء التأنيث الساكنة"], ans: 3 },
+            { q: "في جملة (جاءَ المعلمونَ)، الفاعل (المعلمون) مرفوع وعلامة رفعه:", options: ["الضمة المقدرة", "النون", "الواو (لأنه جمع مذكر سالم)", "الألف"], ans: 2 },
+
+            // نائب الفاعل (66-70)
+            { q: "الاسم المرفوع الذي يحل محل الفاعل بعد حذفه وبناء الفعل للمجهول يُسمى:", options: ["المبتدأ", "الفاعل", "نائب الفاعل", "اسم كان"], ans: 2 },
+            { q: "عند بناء الفعل الماضي (كَتَبَ) للمجهول، فإنه يصبح:", options: ["يَكْتُبُ", "كُتِبَ (بضم الأول وكسر ما قبل الآخر)", "كاتَبَ", "يُكْتَبُ"], ans: 1 },
+            { q: "عند بناء الفعل المضارع (يَشْرَبُ) للمجهول، فإنه يصبح:", options: ["شَرِبَ", "يَشْرِبُ", "شُورِبَ", "يُشْرَبُ (بضم الأول وفتح ما قبل الآخر)"], ans: 3 },
+            { q: "في جملة (قُرِئَ الدرسُ)، كلمة (الدرسُ) تعرب:", options: ["مبتدأ مرفوع", "مفعول به منصوب", "فاعل مرفوع", "نائب فاعل مرفوع"], ans: 3 },
+            { q: "في الجملة (كُرِّمَ المتفوقون)، نائب الفاعل مرفوع وعلامة رفعه:", options: ["الضمة الظاهرة", "الألف لأنه مثنى", "الواو لأنه جمع مذكر سالم", "ثبوت النون"], ans: 2 }
+        ];
+
+        const container = document.getElementById('questions-container');
+        
+        // Render Questions
+        quizData.forEach((q, index) => {
+            const questionHTML = `
+                <div class="bg-white rounded-xl shadow-md p-6 md:p-8 border-r-4 border-blue-600 question-card" data-index="${index}">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-blue-100 text-blue-800 font-bold rounded-full w-10 h-10 flex items-center justify-center shrink-0 ml-4 border-2 border-blue-300">
+                            ${index + 1}
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-semibold text-gray-800 mt-1">${q.q}</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pl-2 md:pl-14">
+                        ${q.options.map((opt, i) => `
+                            <label class="option-label flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer">
+                                <input type="radio" name="q${index}" value="${i}" class="w-5 h-5 text-blue-600 ml-3 focus:ring-blue-500" required>
+                                <span class="option-text text-lg">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="feedback hidden mt-4 pl-14 font-bold text-lg rounded bg-gray-50 p-3 border"></div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', questionHTML);
+        });
+
+        // Handle Quiz Submission
+        document.getElementById('quiz-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let score = 0;
+            const cards = document.querySelectorAll('.question-card');
+            
+            cards.forEach(card => {
+                const index = card.getAttribute('data-index');
+                const selectedOption = card.querySelector(`input[name="q${index}"]:checked`);
+                const feedbackDiv = card.querySelector('.feedback');
+                const labels = card.querySelectorAll('.option-label');
+                const correctAnswerIndex = quizData[index].ans;
+                
+                // Reset styling
+                labels.forEach(l => {
+                    l.classList.remove('correct-answer', 'wrong-answer');
+                    l.querySelector('input').disabled = true; // Disable after submission
+                });
+                feedbackDiv.classList.remove('hidden', 'text-green-600', 'text-red-600');
+
+                if (selectedOption) {
+                    const selectedValue = parseInt(selectedOption.value);
+                    if (selectedValue === correctAnswerIndex) {
+                        score++;
+                        labels[selectedValue].classList.add('correct-answer');
+                        feedbackDiv.textContent = 'إجابة صحيحة ✓';
+                        feedbackDiv.classList.add('text-green-600');
+                    } else {
+                        labels[selectedValue].classList.add('wrong-answer');
+                        labels[correctAnswerIndex].classList.add('correct-answer');
+                        feedbackDiv.textContent = 'إجابة خاطئة ✗ - الإجابة الصحيحة هي: ' + quizData[index].options[correctAnswerIndex];
+                        feedbackDiv.classList.add('text-red-600');
+                    }
+                }
+            });
+
+            // Show Score Board
+            const scoreBoard = document.getElementById('score-board');
+            const scoreText = document.getElementById('score-text');
+            const scoreMessage = document.getElementById('score-message');
+            
+            scoreText.textContent = `${score} / 70`;
+            scoreBoard.classList.remove('hidden');
+            
+            if(score >= 60) {
+                scoreMessage.textContent = "ممتاز جداً! أنت تتقن النحو العربي ببراعة.";
+                scoreMessage.className = "text-xl font-medium text-green-600 mt-2";
+            } else if(score >= 45) {
+                scoreMessage.textContent = "جيد جداً! عمل رائع، لكن راجع بعض القواعد.";
+                scoreMessage.className = "text-xl font-medium text-blue-600 mt-2";
+            } else {
+                scoreMessage.textContent = "يجب عليك مراجعة المادة بشكل أفضل وتكثيف الدراسة.";
+                scoreMessage.className = "text-xl font-medium text-red-600 mt-2";
+            }
+
+            // Scroll to Top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Hide submit button
+            document.querySelector('button[type="submit"]').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
